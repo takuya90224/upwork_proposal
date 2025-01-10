@@ -32,8 +32,9 @@
         <!-- Submit Button -->
         <div class="flex justify-center mt-4">
             <button type="button" id="submitBtn"
-                class="w-1/3 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 fixed bottom-6">
-                Make
+                class="w-1/3 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 fixed bottom-6 flex items-center justify-center gap-2">
+                <span id="spinner" class="hidden border-t-2 border-white rounded-full w-4 h-4 animate-spin"></span>
+                <span id="btnText">Make</span>
             </button>
         </div>
 
@@ -43,19 +44,32 @@
     <script>
         document.getElementById('submitBtn').addEventListener('click', async () => {
             const textarea1 = document.getElementById('textarea1').value;
-            const textarea2 = document.getElementById('textarea2').value;
             const responseElement = document.getElementById('response');
+            const submitBtn = document.getElementById('submitBtn');
+            const spinner = document.getElementById('spinner');
+            const btnText = document.getElementById('btnText');
+
+            // Show spinner and disable button
+            spinner.classList.remove('hidden');
+            btnText.textContent = 'Processing...';
+            submitBtn.disabled = true;
 
             try {
-                const response = await axios.post('https://hook.eu2.make.com/376c3dk7ektkrxcp18us5hdrlmwe49k5', { description: textarea1 });
-                console.log(response)
-                document.getElementById('textarea2').value = response.data;
+                const response = await axios.post('https://apps.taskmagic.com/api/v1/webhooks/3BishpfYNnlgr64rytthy/sync', { description: textarea1 });
+                console.log(response);
+                document.getElementById('textarea2').value = response.data.proposal;
+                responseElement.textContent = 'Proposal generated successfully!';
                 responseElement.classList.remove('text-red-600');
                 responseElement.classList.add('text-green-600');
             } catch (error) {
                 responseElement.textContent = `Error: ${error.response ? error.response.data.message : error.message}`;
                 responseElement.classList.remove('text-green-600');
                 responseElement.classList.add('text-red-600');
+            } finally {
+                // Hide spinner and enable button
+                spinner.classList.add('hidden');
+                btnText.textContent = 'Make';
+                submitBtn.disabled = false;
             }
         });
     </script>

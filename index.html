@@ -58,7 +58,7 @@
             try {
                 const response = await axios.post('https://apps.taskmagic.com/api/v1/webhooks/3BishpfYNnlgr64rytthy/sync', { description: textarea1 });
                 console.log(response);
-                document.getElementById('textarea2').value = response.data.propsal;
+                document.getElementById('textarea2').value = response.data.proposal;
                 responseElement.textContent = 'Proposal generated successfully!';
                 responseElement.classList.remove('text-red-600');
                 responseElement.classList.add('text-green-600');
